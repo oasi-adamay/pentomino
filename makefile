@@ -29,7 +29,7 @@ DEPENDS	= $(patsubst %.cpp,%.d,$(SRCS))
 CC = clang++
 CFLAGS = -Wall -std=c++14
 CFLAGS += -D_CRT_SECURE_NO_WARNINGS
-#CFLAGS = -Wall
+#CFLAGS += -fopenmp
 
 ifeq ($(BUILD_TYPE),Debug)
 CFLAGS += -g -O0

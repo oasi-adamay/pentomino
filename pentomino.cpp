@@ -38,15 +38,15 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 // generic include
 #include <stdio.h>
-#include <tchar.h>
 #include <string>
+#include <climits>
 #include <vector>
+#include <list>
 #include <iostream>
 #include <fstream>
 #include <algorithm>
 #include <memory>
 #include <chrono>
-#include <list>
 #include <assert.h>
 
 #include "getopt.h"

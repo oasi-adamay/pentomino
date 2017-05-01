@@ -256,8 +256,8 @@ paket-files/
 *.d
 
 # executabel
-*.exe
-
+pentomino.exe
+pentomino
 
 
 

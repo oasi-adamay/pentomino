@@ -27,8 +27,8 @@ DEPENDS	= $(patsubst %.cpp,%.d,$(SRCS))
 # tool chain & options
 
 CC = clang++
-#CFLAGS = -Wall -std=c++14
-CFLAGS = -Wall
+CFLAGS = -Wall -std=c++14
+#CFLAGS = -Wall
 
 ifeq ($(BUILD_TYPE),Debug)
 CFLAGS += -g -O0

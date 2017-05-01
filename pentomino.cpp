@@ -80,6 +80,9 @@ const & define macro
 #define BOARD_CELL_BOARDER  INT_MAX		//cell is boarder 
 #define PIECE_BLOCK_NUM 5				//piece block num (pentomino==5)
 
+#define PRINT_COLOR_PIECE				//print color
+
+
 /*!
 global var. (for debug)
 */
@@ -286,7 +289,8 @@ static void print_board(const vector<Piece>& pieces, const vector<int> board, co
 		}
 		printf("\n");
 	}
-#ifndef WIN32 
+
+#ifdef PRINT_COLOR_PIECE 
 	printf("%s", "\x1b[49m\x1b[39m");
 #endif
 
@@ -431,8 +435,10 @@ static void init_pieces(vector<Piece>& pieces, int rows, int cols){
 	for (int i = 0; i < num; i++){
 		pentomino_database_t* db = &database[i];
 		pieces[i].name = db->name;
-#ifndef WIN32 
+#ifdef PRINT_COLOR_PIECE 
 		strncpy(pieces[i].color,db->color,sizeof(pieces[i].color));
+#else
+		strncpy(pieces[i].color,"",sizeof(pieces[i].color));
 #endif
 		int j = 0;
 		char shape[sizeof(db->data)];

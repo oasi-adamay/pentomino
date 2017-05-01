@@ -39,6 +39,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // generic include
 #include <stdio.h>
 #include <string>
+#include <string.h>
 #include <climits>
 #include <vector>
 #include <list>
@@ -94,6 +95,8 @@ struct pentomino_database_t{
 	int       rows;		//!< rows of shape data
 	int       cols;		//!< cols of shape data
 	char	  data[9];	//!< piece shape data (to decrease  number of row, rotate the shape.)
+	char      color[32];//!< color code
+	
 } database[] = {
 	{
 		'X', 3 , 3,
@@ -101,14 +104,16 @@ struct pentomino_database_t{
 			0,1,0,
 			1,1,1,
 			0,1,0,
-		}
+		},
+		"\x1b[41m\x1b[37m"	//red white
 	},
 	{
 		'U', 2, 3,
 		{
 			1,1,1,
 			1,0,1,
-		}
+		},
+		"\x1b[42m\x1b[37m"	//green white
 	},
 	{
 		'W', 3, 3,
@@ -116,7 +121,8 @@ struct pentomino_database_t{
 			1,1,0,
 			0,1,1,
 			0,0,1,
-		}
+		},
+		"\x1b[43m\x1b[30m"	//yellow bk
 	},
 	{
 		'F', 3, 3,
@@ -124,8 +130,8 @@ struct pentomino_database_t{
 			1,1,0,
 			0,1,1,
 			0,1,0,
-		}
-
+		},
+		"\x1b[44m\x1b[37m"	//blue white
 	},
 	{
 		'Z', 3, 3,
@@ -133,28 +139,32 @@ struct pentomino_database_t{
 			1,1,0,
 			0,1,0,
 			0,1,1,
-		}
+		},
+		"\x1b[45m\x1b[30m"	//magenta bk
 	},
 	{
 		'P', 2,3,
 		{
 			1,1,1,
 			1,1,0,
-		}
+		},
+		"\x1b[46m\x1b[30m"	//cy bk
 	},
 	{
 		'N', 2, 4,
 		{
 			1,1,1,0,
 			0,0,1,1,
-		}
+		},
+		"\x1b[40m\x1b[31m"	//bk red
 	},
 	{
 		'Y', 2, 4,
 		{
 			1,1,1,1,
 			0,1,0,0,
-		}
+		},
+		"\x1b[40m\x1b[32m"	//bk green
 	},
 	{
 		'T', 3,3,
@@ -162,14 +172,16 @@ struct pentomino_database_t{
 			1,1,1,
 			0,1,0,
 			0,1,0,
-		}
+		},
+		"\x1b[40m\x1b[33m"	//bk y
 	},
 	{
 		'L', 2, 4,
 		{
 			1,1,1,1,
 			1,0,0,0,
-		}
+		},
+		"\x1b[40m\x1b[34m"	//bk blue
 	},
 	{
 		'V', 3, 3,
@@ -177,13 +189,15 @@ struct pentomino_database_t{
 			1,1,1,
 			1,0,0,
 			1,0,0,
-		}
+		},
+		"\x1b[40m\x1b[35m"	//bk mg
 	},
 	{
 		'I', 1, 5,
 		{
 			1,1,1,1,1,
-		}
+		},
+		"\x1b[40m\x1b[36m"	//bk cy
 	},
 };
 
@@ -193,7 +207,7 @@ pentomino piece struct
 */
 typedef struct {
 	char	name;				//!< piece name
-	char	_pad[3];			//!< padding
+	char	color[32];			//!< piece color
 	int    shape_num;			//!< shape num
 	struct {
 		//!< the offset address from shape origin(left top) for each block positions.
@@ -245,10 +259,11 @@ static void print_board(const vector<Piece>& pieces, const vector<int> board, co
 				int idx = y * (cols + 1) + x;
 				const int n = board[idx];
 				if (n != BOARD_CELL_EMPTY) {
-					printf(" %c", pieces[n].name);
+					printf("%s%c", pieces[n].color,pieces[n].name);
+ 	
 				}
 				else {
-					printf(" %c", ' ');
+					printf("%c", ' ');
 				}
 			}
 			printf("\n");
@@ -261,16 +276,20 @@ static void print_board(const vector<Piece>& pieces, const vector<int> board, co
 				int idx = y * (cols + 1) + x;
 				const int n = board[idx];
 				if (n != BOARD_CELL_EMPTY) {
-					printf(" %c", pieces[n].name);
+					printf("%s%c", pieces[n].color,pieces[n].name);
 				}
 				else {
-					printf(" %c", ' ');
+					printf("%c", ' ');
 				}
 			}
 			printf("\n");
 		}
 		printf("\n");
 	}
+#ifndef WIN32 
+	printf("%s", "\x1b[49m\x1b[39m");
+#endif
+
 }
 
 
@@ -412,6 +431,9 @@ static void init_pieces(vector<Piece>& pieces, int rows, int cols){
 	for (int i = 0; i < num; i++){
 		pentomino_database_t* db = &database[i];
 		pieces[i].name = db->name;
+#ifndef WIN32 
+		strncpy(pieces[i].color,db->color,sizeof(pieces[i].color));
+#endif
 		int j = 0;
 		char shape[sizeof(db->data)];
 

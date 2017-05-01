@@ -250,3 +250,14 @@ paket-files/
 # JetBrains Rider
 .idea/
 *.sln.iml
+
+# object / dependency
+*.o
+*.d
+
+# executabel
+*.exe
+
+
+
+
